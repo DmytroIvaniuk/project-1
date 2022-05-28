@@ -52,7 +52,10 @@ public class Main {
                 "3 - Brute force text decryption;");
         action = scanner.nextInt();
         scanner.nextLine();
-
+        if(action<ENCRYPT||action>DECRYPT_BRUTE_FORCE){
+            System.err.println("Choose one of the three menu items");
+            System.exit(1);
+        }
         if (action == ENCRYPT || action == DECRYPT_WITH_KEY) {
             sourceFilePath = fileAddressToRead();
             destFilePath = fileAddressToWrite();
@@ -74,22 +77,22 @@ public class Main {
             sourceFilePath = Path.of(sourceFileName);
         } catch (InvalidPathException e) {
             System.err.println("Path is invalid.");
-            System.exit(1);
+            System.exit(2);
         }
 
         if (!Files.isRegularFile(sourceFilePath)) {
             System.err.println(sourceFilePath.getFileName() + " is not a file.");
-            System.exit(2);
+            System.exit(3);
         }
 
         if (!sourceFilePath.toString().endsWith(".txt")) {
             System.err.println(sourceFilePath.getFileName() + " is not .txt");
-            System.exit(3);
+            System.exit(4);
         }
 
         if (!Files.isReadable(sourceFilePath)) {
             System.err.println(sourceFilePath.getFileName() + " is not readable.");
-            System.exit(4);
+            System.exit(5);
         }
 
         try {
@@ -98,7 +101,7 @@ public class Main {
             }
         } catch (IOException e) {
             System.err.println(sourceFilePath.getFileName() + " is empty.");
-            System.exit(5);
+            System.exit(6);
         }
         return sourceFilePath;
     }
@@ -111,30 +114,30 @@ public class Main {
             destFilePath = Path.of(destFileName);
         } catch (InvalidPathException e) {
             System.err.println("Path is invalid.");
-            System.exit(6);
+            System.exit(7);
         }
 
         if (Files.exists(destFilePath)) {
             if (!Files.isRegularFile(destFilePath)) {
                 System.err.println(destFilePath.getFileName() + " is not a file.");
-                System.exit(7);
+                System.exit(8);
             }
 
             if (!destFilePath.toString().endsWith(".txt")) {
                 System.err.println(destFilePath.getFileName() + " is not .txt");
-                System.exit(8);
+                System.exit(9);
             }
 
             if (!Files.isWritable(destFilePath)) {
                 System.err.println(destFilePath.getFileName() + " is not writable.");
-                System.exit(9);
+                System.exit(10);
             }
         } else {
             try {
                 Files.createFile(destFilePath);
             } catch (IOException e) {
                 System.err.println("Something went wrong while creating the file");
-                System.exit(10);
+                System.exit(11);
             }
         }
         return destFilePath;
@@ -150,7 +153,7 @@ public class Main {
         } catch (IllegalArgumentException e) {
             System.err.println("Key must be a number, number must be greater than zero and less than "
                     + NUMBER_OF_ELEMENTS_IN_ALPHABET);
-            System.exit(11);
+            System.exit(12);
         }
     }
 
@@ -175,7 +178,7 @@ public class Main {
             Files.writeString(destFilePath, cipherText);
         } catch (IOException e) {
             System.err.println("Something went wrong while writing to the file");
-            System.exit(12);
+            System.exit(13);
         }
     }
 
@@ -184,7 +187,8 @@ public class Main {
         for (int i = ZERO_DISPLACE + 1; i < NUMBER_OF_ELEMENTS_IN_ALPHABET; i++) {
             text = cipherCaesar(sourceFilePath, ZERO_DISPLACE - 1).toLowerCase();
             if (text.contains(" на ") || text.contains(" или ") || text.contains(" но ")
-                    || text.contains(" не ") || text.contains(" по ") || text.contains(" из ")) {
+                    || text.contains(" не ") || text.contains(" по ") || text.contains(" из ")
+                    || text.contains(" в ")|| text.contains(" с ")) {
                 return text;
             }
         }
@@ -197,7 +201,7 @@ public class Main {
             text = Files.readString(filePath);
         } catch (IOException e) {
             System.err.println("Can't read the file " + filePath.getFileName());
-            System.exit(13);
+            System.exit(14);
         }
         return text;
     }
